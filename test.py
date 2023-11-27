@@ -25,7 +25,7 @@ dataset_df.head(3)
 # When using `pd_dataframe_to_tf_dataset` (see below), this step can be skipped.
 
 # Name of the label column.
-label = "A"
+label = "spam"
 
 classes = dataset_df[label].unique().tolist()
 print(f"Label classes: {classes}")
@@ -78,22 +78,22 @@ model_1.make_inspector().variable_importances()
 model_1.make_inspector().evaluation()
 
 # %set_cell_height 150
-model_1.make_inspector().training_logs()
+# model_1.make_inspector().training_logs()
 
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 
-logs = model_1.make_inspector().training_logs()
+# logs = model_1.make_inspector().training_logs()
 
-plt.figure(figsize=(12, 4))
+# plt.figure(figsize=(12, 4))
 
-plt.subplot(1, 2, 1)
-plt.plot([log.num_trees for log in logs], [log.evaluation.accuracy for log in logs])
-plt.xlabel("Number of trees")
-plt.ylabel("Accuracy (out-of-bag)")
+# plt.subplot(1, 2, 1)
+# plt.plot([log.num_trees for log in logs], [log.evaluation.accuracy for log in logs])
+# plt.xlabel("Number of trees")
+# plt.ylabel("Accuracy (out-of-bag)")
 
-plt.subplot(1, 2, 2)
-plt.plot([log.num_trees for log in logs], [log.evaluation.loss for log in logs])
-plt.xlabel("Number of trees")
-plt.ylabel("Logloss (out-of-bag)")
+# plt.subplot(1, 2, 2)
+# plt.plot([log.num_trees for log in logs], [log.evaluation.loss for log in logs])
+# plt.xlabel("Number of trees")
+# plt.ylabel("Logloss (out-of-bag)")
 
-plt.show()
+# plt.show()
