@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 import tensorflow as tf
 import math
+import re
 
 from IPython.display import display
 
@@ -97,11 +98,23 @@ plt.xlabel("Number of trees")
 plt.ylabel("Logloss (out-of-bag)")
 
 
+def calculate_run_length_features(email) :
+  runs = re.findall(r"[A-Z]+", email)
+
+  capital_run_length_total = sum(len(run) for run in runs)
+
+  capital_run_length_longest = max(len(run) for run in runs) if runs else 0
+
+  capital_run_length_average = capital_run_length_longest / len(runs) if runs else 0
+
+  return capital_run_length_total, capital_run_length_longest, capital_run_length_average
+
 while 1:
   user_input = input("Enter email: ")
 
   email = str(user_input)
 
+  total, longest, average = calculate_run_length_features(email)
 
   email_data = {
     "word_freq_make": email.lower().count('make'),
@@ -158,9 +171,9 @@ while 1:
     "char_freq_exclamation": email.lower().count('!'),
     "char_freq_dollarsign": email.lower().count('$'),
     "char_freq_hash": email.lower().count('#'),
-    "capital_run_length_average": 1,
-    "capital_run_length_longest": 1,
-    "capital_run_length_total": 1,
+    "capital_run_length_average": average,
+    "capital_run_length_longest": longest,
+    "capital_run_length_total": total,
   }
 
   email_df = pd.DataFrame([email_data])
