@@ -97,76 +97,82 @@ plt.xlabel("Number of trees")
 plt.ylabel("Logloss (out-of-bag)")
 
 
+while 1:
+  user_input = input("Enter email: ")
 
-user_input = input("Enter email: ")
-
-email = str(user_input)
+  email = str(user_input)
 
 
+  email_data = {
+    "word_freq_make": email.lower().count('make'),
+    "word_freq_address": email.lower().count('address'),
+    "word_freq_all": email.lower().count('all'),
+    "word_freq_3d": email.lower().count('3d'),
+    "word_freq_our": email.lower().count('our'),
+    "word_freq_over": email.lower().count('over'),
+    "word_freq_remove": email.lower().count('remove'),
+    "word_freq_internet": email.lower().count('internet'),
+    "word_freq_order": email.lower().count('order'),
+    "word_freq_mail": email.lower().count('mail'),
+    "word_freq_receive": email.lower().count('receive'),
+    "word_freq_will": email.lower().count('will'),
+    "word_freq_people": email.lower().count('people'),
+    "word_freq_report": email.lower().count('report'),
+    "word_freq_addresses": email.lower().count('addresses'),
+    "word_freq_free": email.lower().count('free'),
+    "word_freq_business": email.lower().count('business'),
+    "word_freq_email": email.lower().count('email'),
+    "word_freq_you": email.lower().count('you'),
+    "word_freq_credit": email.lower().count('credit'),
+    "word_freq_your": email.lower().count('your'),
+    "word_freq_font": email.lower().count('font'),
+    "word_freq_000": email.lower().count('000'),
+    "word_freq_money": email.lower().count('money'),
+    "word_freq_hp": email.lower().count('hp'),
+    "word_freq_hpl": email.lower().count('hpl'),
+    "word_freq_george": email.lower().count('george'),
+    "word_freq_650": email.lower().count('650'),
+    "word_freq_lab": email.lower().count('lab'),
+    "word_freq_labs": email.lower().count('labs'),
+    "word_freq_telnet": email.lower().count('telnet'),
+    "word_freq_857": email.lower().count('857'),
+    "word_freq_data": email.lower().count('data'),
+    "word_freq_415": email.lower().count('415'),
+    "word_freq_85": email.lower().count('85'),
+    "word_freq_technology": email.lower().count('technology'),
+    "word_freq_1999": email.lower().count('1999'),
+    "word_freq_parts": email.lower().count('parts'),
+    "word_freq_pm": email.lower().count('pm'),
+    "word_freq_direct": email.lower().count('direct'),
+    "word_freq_cs": email.lower().count('cs'),
+    "word_freq_meeting": email.lower().count('meeting'),
+    "word_freq_original": email.lower().count('original'),
+    "word_freq_project": email.lower().count('project'),
+    "word_freq_re": email.lower().count('re'),
+    "word_freq_edu": email.lower().count('edu'),
+    "word_freq_table": email.lower().count('table'),
+    "word_freq_conference": email.lower().count('conference'),
+    "char_freq_semicolon": email.lower().count(';'),
+    "char_freq_parenthesis": email.lower().count('('),
+    "char_freq_bracket": email.lower().count('['),
+    "char_freq_exclamation": email.lower().count('!'),
+    "char_freq_dollarsign": email.lower().count('$'),
+    "char_freq_hash": email.lower().count('#'),
+    "capital_run_length_average": 1,
+    "capital_run_length_longest": 1,
+    "capital_run_length_total": 1,
+  }
 
-email_data = {
-  "word_freq_make": email.lower().count('make'),
-  "word_freq_address": email.lower().count('address'),
-  "word_freq_all": email.lower().count('all'),
-  "word_freq_3d": email.lower().count('3d'),
-  "word_freq_our": email.lower().count('our'),
-  "word_freq_over": email.lower().count('over'),
-  "word_freq_remove": email.lower().count('remove'),
-  "word_freq_internet": email.lower().count('internet'),
-  "word_freq_order": email.lower().count('order'),
-  "word_freq_mail": email.lower().count('mail'),
-  "word_freq_receive": email.lower().count('receive'),
-  "word_freq_will": email.lower().count('will'),
-  "word_freq_people": email.lower().count('people'),
-  "word_freq_report": email.lower().count('report'),
-  "word_freq_addresses": email.lower().count('addresses'),
-  "word_freq_free": email.lower().count('free'),
-  "word_freq_business": email.lower().count('business'),
-  "word_freq_email": email.lower().count('email'),
-  "word_freq_you": email.lower().count('you'),
-  "word_freq_credit": email.lower().count('credit'),
-  "word_freq_your": email.lower().count('your'),
-  "word_freq_font": email.lower().count('font'),
-  "word_freq_000": email.lower().count('000'),
-  "word_freq_money": email.lower().count('money'),
-  "word_freq_hp": email.lower().count('hp'),
-  "word_freq_hpl": email.lower().count('hpl'),
-  "word_freq_george": email.lower().count('george'),
-  "word_freq_650": email.lower().count('650'),
-  "word_freq_lab": email.lower().count('lab'),
-  "word_freq_labs": email.lower().count('labs'),
-  "word_freq_telnet": email.lower().count('telnet'),
-  "word_freq_857": email.lower().count('857'),
-  "word_freq_data": email.lower().count('data'),
-  "word_freq_415": email.lower().count('415'),
-  "word_freq_85": email.lower().count('85'),
-  "word_freq_technology": email.lower().count('technology'),
-  "word_freq_1999": email.lower().count('1999'),
-  "word_freq_parts": email.lower().count('parts'),
-  "word_freq_pm": email.lower().count('pm'),
-  "word_freq_direct": email.lower().count('direct'),
-  "word_freq_cs": email.lower().count('cs'),
-  "word_freq_meeting": email.lower().count('meeting'),
-  "word_freq_original": email.lower().count('original'),
-  "word_freq_project": email.lower().count('project'),
-  "word_freq_re": email.lower().count('re'),
-  "word_freq_edu": email.lower().count('edu'),
-  "word_freq_table": email.lower().count('table'),
-  "word_freq_conference": email.lower().count('conference'),
-  "char_freq_semicolon": email.lower().count(';'),
-  "char_freq_parenthesis": email.lower().count('('),
-  "char_freq_bracket": email.lower().count('['),
-  "char_freq_exclamation": email.lower().count('!'),
-  "char_freq_dollarsign": email.lower().count('$'),
-  "char_freq_hash": email.lower().count('#'),
-  "capital_run_length_average": 1,
-  "capital_run_length_longest": 1,
-  "capital_run_length_total": 1,
-}
+  email_df = pd.DataFrame([email_data])
+  email_dataset = tfdf.keras.pd_dataframe_to_tf_dataset(email_df)
 
-email_df = pd.DataFrame([email_data])
-email_dataset = tfdf.keras.pd_dataframe_to_tf_dataset(email_df)
+  prediction = model_1.predict(email_dataset, verbose=0)
+  p = np.round(prediction).astype(int)
+  if p == 1:
+    print("Email is spam")
+  else:
+    print("Email is ham")
 
-prediction = model_1.predict(email_dataset, verbose=0)
-
-print(prediction)
+  b = input("Check another email? (Y/N): ")
+  if b == 'N' or b == 'n':
+    break
