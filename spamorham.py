@@ -1,12 +1,12 @@
 import tensorflow_decision_forests as tfdf
-
 import os
 import numpy as np
 import pandas as pd
 import tensorflow as tf
 import math
 import re
-
+import sys
+import matplotlib.pyplot as plt
 from IPython.display import display
 
 # Download the dataset
@@ -81,7 +81,7 @@ model_1.make_inspector().evaluation()
 #%set_cell_height 150
 model_1.make_inspector().training_logs()
 
-import matplotlib.pyplot as plt
+
 
 logs = model_1.make_inspector().training_logs()
 
@@ -97,7 +97,6 @@ plt.plot([log.num_trees for log in logs], [log.evaluation.loss for log in logs])
 plt.xlabel("Number of trees")
 plt.ylabel("Logloss (out-of-bag)")
 
-#plt.show()
 
 def calculate_run_length_features(email) :
   runs = re.findall(r"[A-Z]+", email)
@@ -107,12 +106,14 @@ def calculate_run_length_features(email) :
   capital_run_length_longest = max(len(run) for run in runs) if runs else 0
 
   capital_run_length_average = capital_run_length_total / len(runs) if runs else 0
-
+ 
   return capital_run_length_total, capital_run_length_longest, capital_run_length_average
 
 while 1:
-  user_input = input("Enter email: ")
 
+  #user_input = input("Enter email: ")
+  print("Enter email: ")
+  user_input = sys.stdin.read() 
   email = str(user_input)
 
   total, longest, average = calculate_run_length_features(email)
