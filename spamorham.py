@@ -105,7 +105,7 @@ def calculate_run_length_features(email) :
 
   capital_run_length_longest = max(len(run) for run in runs) if runs else 0
 
-  capital_run_length_average = capital_run_length_longest / len(runs) if runs else 0
+  capital_run_length_average = capital_run_length_total / len(runs) if runs else 0
 
   return capital_run_length_total, capital_run_length_longest, capital_run_length_average
 
