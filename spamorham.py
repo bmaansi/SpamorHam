@@ -97,6 +97,7 @@ plt.plot([log.num_trees for log in logs], [log.evaluation.loss for log in logs])
 plt.xlabel("Number of trees")
 plt.ylabel("Logloss (out-of-bag)")
 
+#plt.show()
 
 def calculate_run_length_features(email) :
   runs = re.findall(r"[A-Z]+", email)
