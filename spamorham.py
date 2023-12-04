@@ -6,8 +6,18 @@ import tensorflow as tf
 import math
 import re
 import sys
-import matplotlib.pyplot as plt
-from IPython.display import display
+from matplotlib import pyplot as plt
+import dtreeviz
+from IPython import display
+
+#Set seed to 6789 to ensure the same training/testing split for dataset and same models when analyzing
+
+import logging
+logging.getLogger('matplotlib.font_manager').setLevel(level=logging.CRITICAL)
+
+display.set_matplotlib_formats('retina') # generate hires plots
+
+np.random.seed(6789)  # reproducible plots/data for explanatory reasons
 
 # Download the dataset
 # wget -q https://storage.googleapis.com/download.tensorflow.org/data/palmer_penguins/penguins.csv -O /tmp/penguins.csv
@@ -35,8 +45,9 @@ dataset_df[label] = dataset_df[label].map(classes.index)
 
 # Split the dataset into a training and a testing dataset.
 
-def split_dataset(dataset, test_ratio=0.30):
+def split_dataset(dataset, test_ratio=0.30, seed=6789):
   """Splits a panda dataframe in two."""
+  np.random.seed(seed)
   test_indices = np.random.rand(len(dataset)) < test_ratio
   return dataset[~test_indices], dataset[test_indices]
 
@@ -48,10 +59,8 @@ print("{} examples in training, {} examples for testing.".format(
 train_ds = tfdf.keras.pd_dataframe_to_tf_dataset(train_ds_pd, label=label)
 test_ds = tfdf.keras.pd_dataframe_to_tf_dataset(test_ds_pd, label=label)
 
-# %set_cell_height 300
-
 # Specify the model.
-model_1 = tfdf.keras.RandomForestModel(verbose=2)
+model_1 = tfdf.keras.RandomForestModel(verbose=2, random_seed=6789)
 
 # Train the model.
 model_1.fit(train_ds)
@@ -63,11 +72,77 @@ print()
 for name, value in evaluation.items():
   print(f"{name}: {value:.4f}")
 
-model_1.save("/tmp/my_saved_model")
+# model_1.save("/tmp/my_saved_model")
 
 tfdf.model_plotter.plot_model_in_colab(model_1, tree_idx=0, max_depth=3)
 
-# %set_cell_height 300
+#Build, Train, and evaluate code ends briefly, Visualizing code starts
+
+# IMPORTANT TIP: A value of 1 means spam, a value of 0 means ham
+
+# Visualizing Trees code starts here
+
+# Tell dtreeviz about training data and model
+spam_features = [f.name for f in model_1.make_inspector().features()]
+viz_model_1 = dtreeviz.model(model_1,
+                           tree_index=3,
+                           X_train=train_ds_pd[spam_features],
+                           y_train=train_ds_pd[label],
+                           feature_names=spam_features,
+                           target_name=label,
+                           class_names=classes)
+
+# PUT BREAKPOINTS AFTER v.show() at the next line of real code
+
+v = viz_model_1.view(scale=5) # // Best General Overview for our model, LIKELY USE
+v.show()
+
+# Root node of the tree, mainly useless for our plot, doesn't show much value, just leave commented or delete
+# v = viz_model_1.view(depth_range_to_display=[0,0], scale=10)
+# v.show()
+
+# Second level of the tree, mainly useless for our plot, doesn't show much value, just leave commented or delete
+# v = viz_model_1.view(depth_range_to_display=[1,1], scale=5)
+# v.show()
+
+# Simpler versions of the tree display // USE THIS most likely
+# v = viz_model_1.view(fancy=False, scale=.75)
+# v.show()
+
+# Left to right verision, pretty much useless for our plot, just leave commented or delete
+# v = viz_model_1.view(orientation='LR', scale=.75)
+# v.show()
+
+# Bar chart version instead of pie chart // Maybe want to stick to Pie chart so maybe not use?
+# v = viz_model_1.view(leaftype='barh', scale=.75)
+# v.show()
+
+# Examine the number of training data instances that are grouped into each leaf node // NOT WORKING
+# v = viz_model_1.leaf_sizes(figsize=(5,1.5))
+# v.show()
+
+# How the classifier makes a decision for a specific instance, highlight the path from the root to the leaf pursued by the classifier to make the 
+# prediction for that instance. "show_just_path=True" function shows a simpler more readable picture of the path // USE ONE OR BOTH OF THESE FOR SURE
+x = train_ds_pd[spam_features].iloc[50]
+v = viz_model_1.view(x=x, scale=5)
+v.show()
+v = viz_model_1.view(x=x, show_just_path=True, scale=5)
+v.show()
+
+# Prints the path in english word form, however doesn't seem to link up with the images' path.
+# print(viz_model_1.explain_prediction_path(x=x))
+
+
+# NOT WORKING
+# v = viz_model_1.ctree_feature_space(features=['word_freq_make'], show={'splits','legend'}, figsize=(5,1.5))
+# v.show()
+
+# Visualizing Trees code ends here
+
+
+
+
+# Build, Train, and evaluate code begins again
 model_1.summary()
 
 # The input features
@@ -78,7 +153,7 @@ model_1.make_inspector().variable_importances()
 
 model_1.make_inspector().evaluation()
 
-#%set_cell_height 150
+
 model_1.make_inspector().training_logs()
 
 
@@ -97,7 +172,7 @@ plt.plot([log.num_trees for log in logs], [log.evaluation.loss for log in logs])
 plt.xlabel("Number of trees")
 plt.ylabel("Logloss (out-of-bag)")
 
-#plt.show()
+plt.show()
 
 def calculate_run_length_features(email) :
   runs = re.findall(r"[A-Z]+", email)
