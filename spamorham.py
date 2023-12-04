@@ -10,23 +10,22 @@ from matplotlib import pyplot as plt
 import dtreeviz
 from IPython import display
 
-#Set seed to 6789 to ensure the same training/testing split for dataset and same models when analyzing
+# Uncomment majority of the code when doing Final Submission, But comment plots for demo in-class
+
+#Set seed to 6789 to ensure the same training/testing split and reproducability for dataset and same models when analyzing
 
 import logging
 logging.getLogger('matplotlib.font_manager').setLevel(level=logging.CRITICAL)
 
 display.set_matplotlib_formats('retina') # generate hires plots
 
-np.random.seed(6789)  # reproducible plots/data for explanatory reasons
-
-# Download the dataset
-# wget -q https://storage.googleapis.com/download.tensorflow.org/data/palmer_penguins/penguins.csv -O /tmp/penguins.csv
+np.random.seed(6789)  # reproducible plots/data for analytical and explanatory reasons
 
 # Load a dataset into a Pandas Dataframe.
 dataset_df = pd.read_csv("spambase.csv")
 
 # Display the first 3 examples.
-dataset_df.head(3)
+#dataset_df.head(3)
 
 # Encode the categorical labels as integers.
 #
@@ -45,6 +44,7 @@ dataset_df[label] = dataset_df[label].map(classes.index)
 
 # Split the dataset into a training and a testing dataset.
 
+# 30% of the data is used as test data or Out of bag sample
 def split_dataset(dataset, test_ratio=0.30, seed=6789):
   """Splits a panda dataframe in two."""
   np.random.seed(seed)
@@ -74,7 +74,7 @@ for name, value in evaluation.items():
 
 # model_1.save("/tmp/my_saved_model")
 
-tfdf.model_plotter.plot_model_in_colab(model_1, tree_idx=0, max_depth=3)
+# tfdf.model_plotter.plot_model_in_colab(model_1, tree_idx=0, max_depth=3)
 
 #Build, Train, and evaluate code ends briefly, Visualizing code starts
 
@@ -92,7 +92,7 @@ viz_model_1 = dtreeviz.model(model_1,
                            target_name=label,
                            class_names=classes)
 
-# PUT BREAKPOINTS AFTER v.show() at the next line of real code
+# PUT BREAKPOINTS AFTER v.show() at the next line of real code if you want to see each graph individually
 
 v = viz_model_1.view(scale=5) # // Best General Overview for our model, LIKELY USE
 v.show()
@@ -105,9 +105,9 @@ v.show()
 # v = viz_model_1.view(depth_range_to_display=[1,1], scale=5)
 # v.show()
 
-# Simpler versions of the tree display // USE THIS most likely
-# v = viz_model_1.view(fancy=False, scale=.75)
-# v.show()
+# Simpler versions of the tree display, shows floating point values // USE THIS most likely
+v = viz_model_1.view(fancy=False, scale=5)
+v.show()
 
 # Left to right verision, pretty much useless for our plot, just leave commented or delete
 # v = viz_model_1.view(orientation='LR', scale=.75)
@@ -117,25 +117,20 @@ v.show()
 # v = viz_model_1.view(leaftype='barh', scale=.75)
 # v.show()
 
-# Examine the number of training data instances that are grouped into each leaf node // NOT WORKING
-# v = viz_model_1.leaf_sizes(figsize=(5,1.5))
-# v.show()
 
 # How the classifier makes a decision for a specific instance, highlight the path from the root to the leaf pursued by the classifier to make the 
 # prediction for that instance. "show_just_path=True" function shows a simpler more readable picture of the path // USE ONE OR BOTH OF THESE FOR SURE
 x = train_ds_pd[spam_features].iloc[50]
 v = viz_model_1.view(x=x, scale=5)
 v.show()
+# Shows the path with boxes without the whole decision tree.
 v = viz_model_1.view(x=x, show_just_path=True, scale=5)
 v.show()
 
-# Prints the path in english word form, however doesn't seem to link up with the images' path.
+# Prints the path in english word form
 # print(viz_model_1.explain_prediction_path(x=x))
 
 
-# NOT WORKING
-# v = viz_model_1.ctree_feature_space(features=['word_freq_make'], show={'splits','legend'}, figsize=(5,1.5))
-# v.show()
 
 # Visualizing Trees code ends here
 
@@ -146,10 +141,10 @@ v.show()
 model_1.summary()
 
 # The input features
-model_1.make_inspector().features()
+#model_1.make_inspector().features()
 
 # The feature importances
-model_1.make_inspector().variable_importances()
+#model_1.make_inspector().variable_importances()
 
 model_1.make_inspector().evaluation()
 
